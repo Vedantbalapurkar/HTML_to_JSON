@@ -29,28 +29,27 @@ def main():
         if url:
             content = fetch_content_from_url(url)
             if content is not None:
-                url_content(content, url)
+                url_content(url)
 
-def url_content(content, url):
-    # Call the partition function using the content
-    elements = partition_html(url=url, ssl_verify=False)
+def url_content(url):
 
-    # Display the extracted elements
+    elements = partition_html(url=url, ssl_verify=False)  # Make sure the partition function is defined or imported
+
+            # Display the extracted elements
     st.write("Extracted elements:")
-    for idx, element in enumerate(elements):
-        # Convert the element to a serializable format
-        serializable_element = {
-            "extracted_data": element.text  # Modify this to access the actual data you want to display/download
-        }
-        element_json = json.dumps(serializable_element, default=str, indent=2)
-        st.json(element_json)
+    for element in elements:
+                # Convert the element to a serializable format (e.g., extract relevant attributes)
+                # serializable_element = {"elements": element.elements}
+                # You need to modify this part based on the structure of the elements
 
-        # Add a download button for extracted content
-    extracted_content = element.text
-    extracted_filename = f"extracted_content_{idx}.txt"
+                # Convert the serializable element to JSON format
+        element_json = json.dumps(element.__dict__, default=str, indent=2)
+        st.json(element_json)  # Display the JSON content
+
+                # Add a download button
+    extracted_content = "\n\n".join([json.dumps(element.__dict__, default=str, indent=2) for element in elements])
+    extracted_filename = "extracted_content.json"
     st.download_button("Download Extracted Content", data=extracted_content, file_name=extracted_filename)
-
-
 
 
 
